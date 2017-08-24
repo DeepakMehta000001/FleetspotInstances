@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from dashboard.views import signup,home,loginUser,dashboard_config
+
 
 urlpatterns = [
+    url(r'^$',home,name='home'),
+    url(r'^login/$',loginUser,name='login'),
+    url(r'^dashboard/$',dashboard_config,name='config'),
+    url(r'^register/$',signup,name='register'),
     url(r'^admin/', admin.site.urls),
 ]

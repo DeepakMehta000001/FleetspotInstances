@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.models import AnonymousUser
-from .forms import UserForm,LoginForm
+from .forms import UserForm,LoginForm,CredentialForm
 from django.views.generic import View
 
 
@@ -45,13 +45,33 @@ class UserFormView(View):
 def home(request):
     if not request.user.is_anonymous():
             return redirect('/dashboard')
-
     return redirect('/login')
 
 
 def dashboard_config(request):
-    return render(request,"home.html",{})
+    title = 'Dashboard'
+    page_title = 'Welcome '+request.user.username+' to the dashboard'
+    context = {
+	    "heading": page_title,
+        "title" : title,
+    }
+    return render(request,"home.html",context)
 
+def fleet_request(request):
+    title = 'Fleet Spot Instance Request'
+    form = CredentialForm(request.POST or None)
+    IamFleetRole = request.POST.get('IamFleetRole', '')
+    TargetCapacity = request.POST.get('TargetCapacity', '')
+    InstanceType = request.POST.get('InstanceType', '')
+    SubnetId = request.POST.get('SubnetId', '')
+    spotPrice = request.POST.get('spotPrice', '')
+    ValidUntil = request.POST.get('time_of_expiration', '')
+
+    context = {
+	    "title": title,
+	    "form" : form
+    }
+    return render(request,"configure.html",context)
 
 def loginUser(request):
     title ='Please Log in'
@@ -84,3 +104,4 @@ def signup(request):
     }
 
     return render(request,"registration_form.html",context)
+
